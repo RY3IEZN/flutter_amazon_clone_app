@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_amazonclone/common/custom_button.dart';
 import 'package:flutter_amazonclone/common/custom_textfield.dart';
+import 'package:flutter_amazonclone/services/auth_service.dart';
 
 enum Auth { signin, signup }
 
@@ -20,6 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final AuthService authService = AuthService();
 
   @override
   void dispose() {
@@ -28,6 +30,21 @@ class _AuthScreenState extends State<AuthScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+  }
+
+  void signUpUser() {
+    authService.signUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        name: _nameController.text,
+        context: context);
+  }
+
+  void signInUser() {
+    authService.signInUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        context: context);
   }
 
   @override
@@ -93,7 +110,13 @@ class _AuthScreenState extends State<AuthScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        CustomButton(text: "Sign Up", onPressed: () {})
+                        CustomButton(
+                            text: "Sign Up",
+                            onPressed: () {
+                              if (_signUpFormKey.currentState!.validate()) {
+                                signUpUser();
+                              }
+                            })
                       ],
                     ),
                   ),
@@ -138,7 +161,13 @@ class _AuthScreenState extends State<AuthScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        CustomButton(text: "Sign In", onPressed: () {})
+                        CustomButton(
+                            text: "Sign In",
+                            onPressed: () {
+                              if (_signinFormKey.currentState!.validate()) {
+                                signInUser();
+                              }
+                            })
                       ],
                     ),
                   ),
