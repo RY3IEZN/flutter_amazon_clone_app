@@ -79,12 +79,50 @@ class AuthService {
             Provider.of<UserProvider>(context, listen: false).setUser(res.body);
             await preferences.setString(
                 "x-auth-token", jsonDecode(res.body)["token"]);
-            showSnackBar(context, "Login Successful");
             Navigator.pushNamedAndRemoveUntil(
                 context, HomeScreen.routeName, (route) => false);
           });
+      showSnackBar(context, "Login Successful");
     } catch (e) {
       showSnackBar(context, e.toString());
+      print(e);
+      print(e.hashCode);
+      print("${e.toString()} look here");
+      print(e.runtimeType);
+    }
+  }
+
+  // get USerdata
+  void getUserData({required BuildContext context}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString("x-auth-token");
+      if (token == null) {
+        prefs.setString("x-auth-token", "");
+      }
+
+      var tokenRes = await http.post(
+          Uri.parse("http://192.168.0.232:3008/api/tokenIsValid"),
+          headers: <String, String>{
+            "Content-type": "application/json; charset=UTF-8",
+            "x-auth-token": token!
+          });
+
+      var response = jsonDecode(tokenRes.body);
+
+      if (response == true) {
+        http.Response userRes = await http.get(
+            Uri.parse("http://192.168.0.232:3008/"),
+            headers: <String, String>{
+              "Content-type": "application/json; charset=UTF-8",
+              "x-auth-token": token
+            });
+
+        var userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(userRes.body);
+      }
+    } catch (e) {
+      // showSnackBar(context, e.toString());
       print(e);
       print(e.hashCode);
       print("${e.toString()} look here");
