@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_amazonclone/auth/auth_screen.dart';
 import 'package:flutter_amazonclone/navigation/route.dart';
 import 'package:flutter_amazonclone/provider/user_provider.dart';
+import 'package:flutter_amazonclone/screens/admin_screen.dart';
+import 'package:flutter_amazonclone/screens/bottom_bar.dart';
 import 'package:flutter_amazonclone/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +42,9 @@ class _MyAppState extends State<MyApp> {
       ),
       onGenerateRoute: ((settings) => generateRoute(settings)),
       home: Provider.of<UserProvider>(context).user.token.isNotEmpty
-          ? HomeScreen()
+          ? Provider.of<UserProvider>(context).user.type == "user"
+              ? BottomBar()
+              : AdminScreen()
           : AuthScreen(),
     );
   }

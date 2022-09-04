@@ -5,6 +5,7 @@ import 'package:flutter_amazonclone/common/error_handling.dart';
 import 'package:flutter_amazonclone/common/utils.dart';
 import 'package:flutter_amazonclone/model/user.dart';
 import 'package:flutter_amazonclone/provider/user_provider.dart';
+import 'package:flutter_amazonclone/screens/bottom_bar.dart';
 import 'package:flutter_amazonclone/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -80,7 +81,7 @@ class AuthService {
             await preferences.setString(
                 "x-auth-token", jsonDecode(res.body)["token"]);
             Navigator.pushNamedAndRemoveUntil(
-                context, HomeScreen.routeName, (route) => false);
+                context, BottomBar.routeName, (route) => false);
           });
       showSnackBar(context, "Login Successful");
     } catch (e) {
