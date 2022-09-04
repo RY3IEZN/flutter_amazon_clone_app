@@ -25,7 +25,6 @@ const connectToDb = async () => {
   try {
     let dbStats = await mongoose.connect(
       "mongodb://127.0.0.1:27017/amazon"
-      // "mongodb+srv://nekzane:nekzane@cluster0.zi1eysw.mongodb.net/?retryWrites=true&w=majority"
     );
     console.log(mongoose.connection.readyState);
     if (!dbStats) {
