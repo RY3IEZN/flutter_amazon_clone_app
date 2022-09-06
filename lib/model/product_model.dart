@@ -9,7 +9,7 @@ class Product {
   final List<String> images;
   final String category;
   final double price;
-  // final String? id;
+  final String? id;
   // final List<Rating>? rating;
   Product({
     required this.name,
@@ -18,7 +18,7 @@ class Product {
     required this.images,
     required this.category,
     required this.price,
-    // this.id,
+    this.id,
     // this.rating,
   });
 
@@ -30,7 +30,7 @@ class Product {
       'images': images,
       'category': category,
       'price': price,
-      // 'id': id,
+      'id': id,
       // 'rating': rating,
     };
   }
@@ -43,7 +43,7 @@ class Product {
       images: List<String>.from(map['images']),
       category: map['category'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
-      // id: map['_id'],
+      id: map['_id'],
       // rating: map['ratings'] != null
       //     ? List<Rating>.from(
       //         map['ratings']?.map(

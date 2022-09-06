@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ import "package:http/http.dart" as http;
 import 'package:provider/provider.dart';
 
 class AdminServices {
+// sell product
+
   void sellProuct({
     required BuildContext context,
     required String name,
@@ -53,6 +56,64 @@ class AdminServices {
           onSuccess: () {
             showSnackBar(context, "Product added succesfully");
             Navigator.pop(context);
+          });
+    } catch (e) {
+      print(e.toString());
+      showSnackBar(context, e.toString());
+    }
+  }
+
+// fetch the products
+  Future<List<Product>> fetchAllProduct(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<Product> productList = [];
+    try {
+      http.Response res = await http.get(
+          Uri.parse("http://192.168.0.232:3008/admin/get-product"),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "x-auth-token": userProvider.user.token
+          });
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < json.decode(res.body).length; i++) {
+            productList
+                .add(Product.fromJson(jsonEncode(jsonDecode(res.body)[i])));
+          }
+          print(res.body);
+        },
+      );
+    } catch (e) {
+      print(e.toString());
+      print(e);
+      showSnackBar(context, e.toString());
+    }
+    return productList;
+  }
+
+  void deleteProduct(
+      {required BuildContext context,
+      required Product product,
+      required VoidCallback onSuccess}) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.post(
+        Uri.parse("http://192.168.0.232:3008/admin/delete-product"),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "x-auth-token": userProvider.user.token
+        },
+        body: jsonEncode({"id": product.id}),
+      );
+
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            onSuccess();
           });
     } catch (e) {
       print(e.toString());
