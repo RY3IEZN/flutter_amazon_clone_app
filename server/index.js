@@ -10,11 +10,12 @@ const bcrypt = require("bcryptjs");
 
 // import from other files
 const authRouter = require("./routes/auth");
+const adminRouter = require("./routes/admin");
 
 //middleware
 app.use(express.json());
 app.use(authRouter);
-
+app.use(adminRouter);
 // inits
 const PORT = 3008;
 
@@ -23,9 +24,7 @@ app.listen(PORT, "0.0.0.0", () => console.log(`connected on port ${PORT}`));
 
 const connectToDb = async () => {
   try {
-    let dbStats = await mongoose.connect(
-      "mongodb://127.0.0.1:27017/amazon"
-    );
+    let dbStats = await mongoose.connect("mongodb://127.0.0.1:27017/amazon");
     console.log(mongoose.connection.readyState);
     if (!dbStats) {
       console.log("disconnected");
